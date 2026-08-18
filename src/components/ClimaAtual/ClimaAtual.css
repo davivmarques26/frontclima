@@ -1,0 +1,100 @@
+.clima-atual {
+  min-height: 206px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 26px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--cor-painel) 85%, #342500),
+      color-mix(in srgb, var(--cor-painel) 85%, #002f42)
+    );
+}
+
+.clima-atual-esquerda {
+  display: flex;
+  flex-direction: column;
+}
+
+.texto-secundario {
+  color: var(--cor-texto-secundario);
+  font-size: 12px;
+}
+
+.temperatura-atual {
+  margin: 8px 0 12px;
+  font-size: clamp(56px, 9vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.temperatura-atual span {
+  margin-left: 6px;
+  font-size: 22px;
+  letter-spacing: normal;
+}
+
+.condicao-clima {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--cor-texto-secundario);
+  font-size: 13px;
+}
+
+.emoji-condicao {
+  font-size: 20px;
+}
+
+.faixa-temperatura-hoje {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  font-size: 12px;
+}
+
+.faixa-temperatura-hoje span {
+  display: flex;
+  align-items: center;
+}
+
+.temperatura-maxima {
+  color: #e76d40;
+}
+
+.temperatura-minima {
+  color: var(--cor-azul);
+}
+
+.clima-atual-direita {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.icone-clima-grande {
+  font-size: 78px;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18));
+}
+
+.clima-atual-direita time {
+  color: color-mix(
+    in srgb,
+    var(--cor-texto-secundario) 65%,
+    transparent
+  );
+  font-size: 12px;
+}
+
+@media (max-width: 440px) {
+  .clima-atual {
+    min-height: 185px;
+    padding: 20px;
+  }
+
+  .icone-clima-grande {
+    font-size: 58px;
+  }
+}

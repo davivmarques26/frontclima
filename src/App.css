@@ -1,0 +1,29 @@
+.aplicacao {
+  min-height: 100vh;
+}
+
+.pagina-principal {
+  width: min(750px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 18px 0 56px;
+}
+
+.caixa-erro,
+.caixa-carregando {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  background: var(--cor-painel);
+  font-size: 13px;
+}
+
+.caixa-erro {
+  color: #ff8e8e;
+}
+
+@media (max-width: 700px) {
+  .pagina-principal {
+    width: min(100% - 20px, 750px);
+  }
+}

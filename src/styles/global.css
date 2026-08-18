@@ -1,0 +1,92 @@
+:root {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #f5f7fb;
+  background: #0b1117;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #0b1117;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+[data-tema="escuro"] {
+  --cor-fundo: #0b1117;
+  --cor-fundo-destaque: #0c2530;
+  --cor-painel: #151c24;
+  --cor-painel-secundario: #1b2436;
+  --cor-borda: #313b47;
+  --cor-texto: #f4f7fb;
+  --cor-texto-secundario: #7f92ad;
+  --cor-azul: #55a2ff;
+  --cor-laranja: #ff6b00;
+  --cor-trilho: #232b34;
+  --cor-input: #151c24;
+}
+
+[data-tema="claro"] {
+  --cor-fundo: #eaf2fb;
+  --cor-fundo-destaque: #fff2d4;
+  --cor-painel: #ffffff;
+  --cor-painel-secundario: #edf3fb;
+  --cor-borda: #d4deea;
+  --cor-texto: #152030;
+  --cor-texto-secundario: #6b7a91;
+  --cor-azul: #2e85e8;
+  --cor-laranja: #e86100;
+  --cor-trilho: #e5ebf1;
+  --cor-input: #ffffff;
+}
+
+[data-tema] {
+  min-height: 100vh;
+  color: var(--cor-texto);
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      var(--cor-fundo-destaque),
+      transparent 48%
+    ),
+    var(--cor-fundo);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.painel {
+  overflow: hidden;
+  border: 1px solid var(--cor-borda);
+  border-radius: 11px;
+  background:
+    color-mix(
+      in srgb,
+      var(--cor-painel) 96%,
+      transparent
+    );
+}

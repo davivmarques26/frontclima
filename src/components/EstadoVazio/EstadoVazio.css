@@ -1,0 +1,6 @@
+.estado-vazio {
+  padding-top: 18px;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  font-size: 11px;
+}
