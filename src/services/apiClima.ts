@@ -1,4 +1,4 @@
-import type { CidadeMapa, DadosClima, Localizacao } from "../types/clima";
+import type { CidadeMapa, DadosClima, Localizacao, SugestaoCidade } from "../types/clima";
 
 export async function buscarCidade(nomeCidade: string): Promise<Localizacao> {
   const endereco = new URL("https://geocoding-api.open-meteo.com/v1/search");
@@ -126,4 +126,55 @@ export async function buscarDadosMapa(
   );
 
   return resultados;
+}
+
+export async function buscarSugestoesCidade(
+  nomeCidade: string
+): Promise<SugestaoCidade[]> {
+  if (nomeCidade.trim().length < 2) {
+    return [];
+  }
+
+  try {
+    const resposta = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+        nomeCidade
+      )}&count=5&language=pt&format=json`
+    );
+
+    if (!resposta.ok) {
+      throw new Error("Erro ao buscar sugestões de cidades.");
+    }
+
+    const dados = await resposta.json();
+
+    if (!dados.results) {
+      return [];
+    }
+
+    return dados.results.map(
+      (cidade: {
+        id: number;
+        name: string;
+        admin1?: string;
+        country?: string;
+        latitude: number;
+        longitude: number;
+      }) => ({
+        id: cidade.id,
+        nome: cidade.name,
+        estado: cidade.admin1,
+        pais: cidade.country,
+        latitude: cidade.latitude,
+        longitude: cidade.longitude,
+      })
+    );
+  } catch (erro) {
+    console.error(
+      "Erro ao buscar sugestões:",
+      erro
+    );
+
+    return [];
+  }
 }

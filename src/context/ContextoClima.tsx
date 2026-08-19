@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DadosClima } from "../types/clima";
+import type { DadosClima, SugestaoCidade, } from "../types/clima";
 import {
   buscarCidade,
   buscarClima,
@@ -19,6 +19,9 @@ interface ValorContextoClima {
   erro: string | null;
   tema: "escuro" | "claro";
   pesquisarClima: (cidade: string) => Promise<void>;
+  pesquisarClimaPorSugestao: (
+    sugestao: SugestaoCidade
+  ) => Promise<void>;
   usarMinhaLocalizacao: () => void;
   alternarTema: () => void;
 }
@@ -30,7 +33,37 @@ export function ProvedorClima({ children }: { children: ReactNode }) {
   const [carregando, definirCarregando] = useState(false);
   const [erro, definirErro] = useState<string | null>(null);
   const [tema, definirTema] = useState<"escuro" | "claro">("escuro");
+  const pesquisarClimaPorSugestao = useCallback(
+    async (sugestao: SugestaoCidade) => {
+      try {
+        definirCarregando(true);
+        definirErro(null);
 
+        const localizacao = {
+          nome: sugestao.nome,
+          estado: sugestao.estado,
+          pais: sugestao.pais ?? "",
+          latitude: sugestao.latitude,
+          longitude: sugestao.longitude,
+        };
+
+        const dadosClima = await buscarClima(localizacao);
+
+        definirClima(dadosClima);
+      } catch (erroCapturado) {
+        definirClima(null);
+
+        definirErro(
+          erroCapturado instanceof Error
+            ? erroCapturado.message
+            : "Ocorreu um erro inesperado."
+        );
+      } finally {
+        definirCarregando(false);
+      }
+    },
+    []
+  );
   const pesquisarClima = useCallback(async (cidade: string) => {
     const cidadeTratada = cidade.trim();
 
@@ -114,6 +147,7 @@ export function ProvedorClima({ children }: { children: ReactNode }) {
       erro,
       tema,
       pesquisarClima,
+      pesquisarClimaPorSugestao,
       usarMinhaLocalizacao,
       alternarTema,
     }),
