@@ -15,12 +15,9 @@ export default function Cabecalho({
 
   return (
     <header className="cabecalho">
-      <div>
-        <span className="cabecalho-subtitulo">
-          CLIMA
-        </span>
-
-        <h1>Previsão do Tempo</h1>
+      <div className="titulo-cabecalho">
+        <span className="cabecalho-subtitulo">CLIMA</span>
+         <h1>Previsão do Tempo</h1>
       </div>
 
       <div className="acoes-cabecalho">
@@ -44,12 +41,7 @@ export default function Cabecalho({
           className="botao-tema"
           onClick={alternarTema}
         >
-          {tema === "escuro" ? (
-            <Sun size={16} />
-          ) : (
-            <Moon size={16} />
-          )}
-
+          {tema === "escuro" ? (<Sun size={16} />) : (<Moon size={16} />)}
           {tema === "escuro" ? "Claro" : "Escuro"}
         </button>
       </div>
