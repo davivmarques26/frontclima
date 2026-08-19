@@ -1,0 +1,182 @@
+.painel-mapa {
+  margin-bottom: 12px;
+}
+
+.topo-mapa {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px 0;
+}
+
+.subtitulo-mapa {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cor-texto-secundario);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+.topo-mapa h2 {
+  margin: 5px 0 14px;
+  color: var(--cor-texto);
+  font-size: 14px;
+}
+
+.alternador-mapa {
+  align-self: flex-start;
+  display: flex;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--cor-painel-secundario);
+}
+
+.alternador-mapa button {
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--cor-texto-secundario);
+  font-size: 11px;
+}
+
+.alternador-mapa button.ativo {
+  background: var(--cor-azul);
+  color: #071321;
+}
+
+.resumo-mapa {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 0 18px 16px;
+}
+
+.resumo-mapa span,
+.resumo-mapa small {
+  display: block;
+  color: var(--cor-texto-secundario);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.resumo-mapa strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 23px;
+}
+
+.resumo-mapa .mais-quente {
+  color: var(--cor-laranja);
+}
+
+.resumo-mapa .mais-fria {
+  color: var(--cor-azul);
+}
+
+.resumo-mapa small {
+  letter-spacing: 0;
+}
+
+.caixa-mapa {
+  position: relative;
+  height: 385px;
+  border-top: 1px solid var(--cor-borda);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.mapa-leaflet {
+  width: 100%;
+  height: 100%;
+  background: #151a1f;
+  filter: brightness(0.52) saturate(0.8) contrast(1.1);
+}
+
+.caixa-mapa .leaflet-control-attribution {
+  font-size: 9px !important;
+}
+
+.marcador-clima {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+}
+
+.marcador-clima::before {
+  display: none !important;
+}
+
+.legenda-mapa {
+  position: absolute;
+  z-index: 500;
+  left: 22px;
+  bottom: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  background: color-mix(
+    in srgb,
+    var(--cor-painel) 92%,
+    transparent
+  );
+  font-size: 9px;
+}
+
+.legenda-mapa > span {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--cor-texto-secundario);
+  letter-spacing: 0.1em;
+}
+
+.legenda-mapa div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.legenda-mapa i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.credito-dados {
+  padding: 7px 14px;
+  color: var(--cor-texto-secundario);
+  text-align: right;
+  font-size: 9px;
+}
+
+@media (max-width: 700px) {
+  .topo-mapa {
+    flex-direction: column;
+  }
+
+  .resumo-mapa {
+    grid-template-columns: 1fr;
+  }
+
+  .caixa-mapa {
+    height: 330px;
+  }
+}
+
+@media (max-width: 440px) {
+  .alternador-mapa {
+    width: 100%;
+  }
+
+  .alternador-mapa button {
+    flex: 1;
+  }
+
+  .legenda-mapa {
+    left: 12px;
+    bottom: 38px;
+  }
+}
