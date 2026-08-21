@@ -8,7 +8,9 @@ import GraficoTemperatura from "./components/GraficoTemperatura/GraficoTemperatu
 import PrevisaoDiaria from "./components/PrevisaoDiaria/PrevisaoDiaria";
 import MapaClima from "./components/MapaClima/MapaClima";
 import EstadoVazio from "./components/EstadoVazio/EstadoVazio";
+
 import { usarClima } from "./context/ContextoClima";
+
 import "./App.css";
 
 export default function App() {
@@ -17,14 +19,23 @@ export default function App() {
   const [paginaAtual, definirPaginaAtual] =
     useState<"inicio" | "mapa">("inicio");
 
+  const [visualizacaoMapa, definirVisualizacaoMapa] =
+    useState<"mapa" | "detalhes">("mapa");
+
+  function abrirPaginaMapa() {
+    definirPaginaAtual("mapa");
+    definirVisualizacaoMapa("mapa");
+  }
+
   return (
     <div className="aplicacao">
       <main className="pagina-principal">
         <Cabecalho
           aoClicarInicio={() => definirPaginaAtual("inicio")}
-          aoClicarMapa={() => definirPaginaAtual("mapa")}
+          aoClicarMapa={abrirPaginaMapa}
         />
 
+        {/* PÁGINA INICIAL */}
         {paginaAtual === "inicio" && (
           <>
             <BarraPesquisa />
@@ -59,8 +70,51 @@ export default function App() {
           </>
         )}
 
+        {/* PÁGINA DO MAPA */}
         {paginaAtual === "mapa" && (
-          <MapaClima />
+          <>
+            {visualizacaoMapa === "mapa" && (
+              <MapaClima
+                aoSelecionarCidade={() =>
+                  definirVisualizacaoMapa("detalhes")
+                }
+              />
+            )}
+
+            {visualizacaoMapa === "detalhes" && (
+              <>
+                <button
+                  className="botao-voltar-mapa"
+                  onClick={() =>
+                    definirVisualizacaoMapa("mapa")
+                  }
+                >
+                  ← Voltar ao mapa
+                </button>
+
+                {erro && (
+                  <div className="caixa-erro">
+                    ⚠️ {erro}
+                  </div>
+                )}
+
+                {carregando && (
+                  <div className="caixa-carregando">
+                    Carregando dados meteorológicos...
+                  </div>
+                )}
+
+                {clima && !carregando && (
+                  <>
+                    <ClimaAtual />
+                    <EstatisticasClima />
+                    <GraficoTemperatura />
+                    <PrevisaoDiaria />
+                  </>
+                )}
+              </>
+            )}
+          </>
         )}
       </main>
     </div>

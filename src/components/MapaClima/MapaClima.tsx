@@ -5,8 +5,15 @@ import {
   TileLayer,
   Tooltip,
 } from "react-leaflet";
-import type { CidadeMapa } from "../../types/clima";
+
+import type {
+  CidadeMapa,
+  Localizacao,
+} from "../../types/clima";
+
 import { buscarDadosMapa } from "../../services/apiClima";
+import { usarClima } from "../../context/ContextoClima";
+
 import "./MapaClima.css";
 
 const cidadesBrasil: CidadeMapa[] = [
@@ -144,7 +151,7 @@ const cidadesBrasil: CidadeMapa[] = [
     nome: "Vitória",
     latitude: -20.3155,
     longitude: -40.3128,
-  }
+  },
 ];
 
 function obterCorTemperatura(temperatura = 24) {
@@ -157,11 +164,20 @@ function obterCorTemperatura(temperatura = 24) {
   return "#ff4d4f";
 }
 
-export default function MapaClima() {
-  const [cidades, definirCidades] = useState(cidadesBrasil);
-  const [modoMapa, definirModoMapa] = useState<
-    "temperatura" | "vento"
-  >("temperatura");
+interface MapaClimaProps {
+  aoSelecionarCidade?: () => void;
+}
+
+export default function MapaClima({
+  aoSelecionarCidade,
+}: MapaClimaProps) {
+  const [cidades, definirCidades] =
+    useState<CidadeMapa[]>(cidadesBrasil);
+
+  const [modoMapa, definirModoMapa] =
+    useState<"temperatura" | "vento">("temperatura");
+
+  const { pesquisarClimaPorLocalizacao } = usarClima();
 
   useEffect(() => {
     let componenteAtivo = true;
@@ -176,6 +192,28 @@ export default function MapaClima() {
       componenteAtivo = false;
     };
   }, []);
+
+  async function selecionarCidadeMapa(
+    cidade: CidadeMapa
+  ) {
+    const localizacao: Localizacao = {
+      nome: cidade.nome,
+      pais: "Brasil",
+      latitude: cidade.latitude,
+      longitude: cidade.longitude,
+    };
+
+    /*
+      Primeiro troca a visualização para a tela
+      de detalhes.
+    */
+    aoSelecionarCidade?.();
+
+    /*
+      Depois busca a previsão completa da cidade.
+    */
+    await pesquisarClimaPorLocalizacao(localizacao);
+  }
 
   const resumo = useMemo(() => {
     const cidadesValidas = cidades.filter(
@@ -222,13 +260,18 @@ export default function MapaClima() {
             VISÃO GERAL
           </span>
 
-          <h2>Brasil — Condições Atuais das Capitais</h2>
+          <h2>
+            Brasil — Condições Atuais das Capitais
+          </h2>
         </div>
 
         <div className="alternador-mapa">
           <button
+            type="button"
             className={
-              modoMapa === "temperatura" ? "ativo" : ""
+              modoMapa === "temperatura"
+                ? "ativo"
+                : ""
             }
             onClick={() =>
               definirModoMapa("temperatura")
@@ -238,8 +281,13 @@ export default function MapaClima() {
           </button>
 
           <button
-            className={modoMapa === "vento" ? "ativo" : ""}
-            onClick={() => definirModoMapa("vento")}
+            type="button"
+            className={
+              modoMapa === "vento" ? "ativo" : ""
+            }
+            onClick={() =>
+              definirModoMapa("vento")
+            }
           >
             💨 Vento
           </button>
@@ -249,6 +297,7 @@ export default function MapaClima() {
       <div className="resumo-mapa">
         <div>
           <span>MÉDIA DAS CAPITAIS</span>
+
           <strong>
             {resumo
               ? `${Math.round(resumo.media)}°C`
@@ -258,6 +307,7 @@ export default function MapaClima() {
 
         <div>
           <span>MAIS QUENTE</span>
+
           <strong className="mais-quente">
             {resumo
               ? `${Math.round(
@@ -265,11 +315,15 @@ export default function MapaClima() {
                 )}°C`
               : "--"}
           </strong>
-          <small>{resumo?.maisQuente.nome}</small>
+
+          <small>
+            {resumo?.maisQuente.nome}
+          </small>
         </div>
 
         <div>
           <span>MAIS FRIA</span>
+
           <strong className="mais-fria">
             {resumo
               ? `${Math.round(
@@ -277,7 +331,10 @@ export default function MapaClima() {
                 )}°C`
               : "--"}
           </strong>
-          <small>{resumo?.maisFria.nome}</small>
+
+          <small>
+            {resumo?.maisFria.nome}
+          </small>
         </div>
       </div>
 
@@ -302,15 +359,26 @@ export default function MapaClima() {
                 cidade.longitude,
               ]}
               radius={15}
+              eventHandlers={{
+                click: () =>
+                  selecionarCidadeMapa(cidade),
+                
+              }}
               pathOptions={{
                 color:
                   modoMapa === "temperatura"
-                    ? obterCorTemperatura(cidade.temperatura)
+                    ? obterCorTemperatura(
+                        cidade.temperatura
+                      )
                     : "#5aa6ff",
+
                 fillColor:
                   modoMapa === "temperatura"
-                    ? obterCorTemperatura(cidade.temperatura)
+                    ? obterCorTemperatura(
+                        cidade.temperatura
+                      )
                     : "#5aa6ff",
+
                 fillOpacity: 0.92,
                 weight: 1,
               }}
@@ -322,7 +390,9 @@ export default function MapaClima() {
               >
                 {modoMapa === "temperatura"
                   ? cidade.temperatura !== undefined
-                    ? `${Math.round(cidade.temperatura)}°`
+                    ? `${Math.round(
+                        cidade.temperatura
+                      )}°`
                     : "..."
                   : cidade.vento !== undefined
                     ? `${Math.round(cidade.vento)}`
@@ -337,32 +407,56 @@ export default function MapaClima() {
             <span>TEMPERATURA</span>
 
             <div>
-              <i style={{ background: "#4a9cff" }} />
+              <i
+                style={{
+                  background: "#4a9cff",
+                }}
+              />
               ≤10°C
             </div>
 
             <div>
-              <i style={{ background: "#11aec5" }} />
+              <i
+                style={{
+                  background: "#11aec5",
+                }}
+              />
               16°C
             </div>
 
             <div>
-              <i style={{ background: "#2cbc63" }} />
+              <i
+                style={{
+                  background: "#2cbc63",
+                }}
+              />
               22°C
             </div>
 
             <div>
-              <i style={{ background: "#f4cf27" }} />
+              <i
+                style={{
+                  background: "#f4cf27",
+                }}
+              />
               27°C
             </div>
 
             <div>
-              <i style={{ background: "#ff8216" }} />
+              <i
+                style={{
+                  background: "#ff8216",
+                }}
+              />
               32°C
             </div>
 
             <div>
-              <i style={{ background: "#ff4d4f" }} />
+              <i
+                style={{
+                  background: "#ff4d4f",
+                }}
+              />
               &gt;32°C
             </div>
           </div>

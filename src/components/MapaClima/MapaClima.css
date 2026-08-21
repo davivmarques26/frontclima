@@ -180,3 +180,37 @@
     bottom: 38px;
   }
 }
+
+.mapa-leaflet .leaflet-interactive {
+  cursor: pointer;
+}
+
+.botao-voltar-mapa {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 16px;
+
+  padding: 9px 14px;
+
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+
+  background: var(--cor-painel-secundario);
+  color: var(--cor-texto);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.botao-voltar-mapa:hover {
+  background: var(--cor-painel);
+  transform: translateY(-1px);
+}
