@@ -81,8 +81,13 @@
 .caixa-mapa {
   position: relative;
   height: 385px;
-  border-top: 1px solid var(--cor-borda);
-  border-bottom: 1px solid var(--cor-borda);
+
+  margin: 0 10px 0;
+
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+
+  overflow: hidden;
 }
 
 .mapa-leaflet {

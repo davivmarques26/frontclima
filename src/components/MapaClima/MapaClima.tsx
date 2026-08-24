@@ -203,15 +203,8 @@ export default function MapaClima({
       longitude: cidade.longitude,
     };
 
-    /*
-      Primeiro troca a visualização para a tela
-      de detalhes.
-    */
     aoSelecionarCidade?.();
 
-    /*
-      Depois busca a previsão completa da cidade.
-    */
     await pesquisarClimaPorLocalizacao(localizacao);
   }
 
