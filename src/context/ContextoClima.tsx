@@ -21,6 +21,7 @@ import {
 
 interface ValorContextoClima {
   clima: DadosClima | null;
+  climaMapa: DadosClima | null;
   carregando: boolean;
   erro: string | null;
   tema: "escuro" | "claro";
@@ -50,6 +51,9 @@ export function ProvedorClima({
   const [clima, definirClima] =
     useState<DadosClima | null>(null);
 
+  const [climaMapa, definirClimaMapa] =
+    useState<DadosClima | null>(null);
+
   const [carregando, definirCarregando] =
     useState(false);
 
@@ -59,9 +63,6 @@ export function ProvedorClima({
   const [tema, definirTema] =
     useState<"escuro" | "claro">("escuro");
 
-  /*
-    Pesquisa uma cidade pelo nome digitado.
-  */
   const pesquisarClima = useCallback(
     async (cidade: string) => {
       const cidadeTratada = cidade.trim();
@@ -97,10 +98,6 @@ export function ProvedorClima({
     []
   );
 
-  /*
-    Pesquisa usando uma cidade escolhida
-    na lista de sugestões.
-  */
   const pesquisarClimaPorSugestao = useCallback(
     async (sugestao: SugestaoCidade) => {
       try {
@@ -134,11 +131,6 @@ export function ProvedorClima({
     []
   );
 
-  /*
-    Pesquisa diretamente usando uma localização.
-
-    Essa função será usada pelo mapa.
-  */
   const pesquisarClimaPorLocalizacao = useCallback(
     async (localizacao: Localizacao) => {
       try {
@@ -148,9 +140,9 @@ export function ProvedorClima({
         const dadosClima =
           await buscarClima(localizacao);
 
-        definirClima(dadosClima);
+        definirClimaMapa(dadosClima);
       } catch (erroCapturado) {
-        definirClima(null);
+        definirClimaMapa(null);
 
         definirErro(
           erroCapturado instanceof Error
@@ -164,9 +156,6 @@ export function ProvedorClima({
     []
   );
 
-  /*
-    Usa a localização atual do navegador.
-  */
   const usarMinhaLocalizacao = useCallback(() => {
     if (!navigator.geolocation) {
       definirErro(
@@ -215,9 +204,6 @@ export function ProvedorClima({
     );
   }, []);
 
-  /*
-    Alterna entre tema claro e escuro.
-  */
   const alternarTema = useCallback(() => {
     definirTema((temaAtual) =>
       temaAtual === "escuro"
@@ -226,13 +212,10 @@ export function ProvedorClima({
     );
   }, []);
 
-  /*
-    Valores disponibilizados para os componentes
-    através do contexto.
-  */
   const valorContexto = useMemo(
     () => ({
       clima,
+      climaMapa,
       carregando,
       erro,
       tema,
@@ -244,6 +227,7 @@ export function ProvedorClima({
     }),
     [
       clima,
+      climaMapa,
       carregando,
       erro,
       tema,

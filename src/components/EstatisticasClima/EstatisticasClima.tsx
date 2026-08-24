@@ -1,30 +1,49 @@
 import { usarClima } from "../../context/ContextoClima";
+import type { DadosClima } from "../../types/clima";
+
 import "./EstatisticasClima.css";
 
-export default function EstatisticasClima() {
+interface EstatisticasClimaProps {
+  dados?: DadosClima | null;
+}
+
+export default function EstatisticasClima({
+  dados,
+}: EstatisticasClimaProps) {
   const { clima } = usarClima();
 
-  if (!clima) return null;
+  const climaExibido = dados ?? clima;
+
+  if (!climaExibido) {
+    return null;
+  }
 
   const estatisticas = [
     {
       titulo: "UMIDADE",
-      valor: Math.round(clima.atual.umidade),
+      valor: Math.round(
+        climaExibido.atual.umidade
+      ),
       unidade: "%",
     },
     {
       titulo: "VELOCIDADE DO VENTO",
-      valor: Math.round(clima.atual.velocidadeVento),
+      valor: Math.round(
+        climaExibido.atual.velocidadeVento
+      ),
       unidade: "km/h",
     },
     {
       titulo: "PRECIPITAÇÃO",
-      valor: clima.atual.precipitacao.toFixed(1),
+      valor:
+        climaExibido.atual.precipitacao.toFixed(1),
       unidade: "mm",
     },
     {
       titulo: "SENSAÇÃO TÉRMICA",
-      valor: Math.round(clima.atual.sensacaoTermica),
+      valor: Math.round(
+        climaExibido.atual.sensacaoTermica
+      ),
       unidade: "°C",
     },
   ];
@@ -40,7 +59,10 @@ export default function EstatisticasClima() {
 
           <strong>
             {estatistica.valor}
-            <small>{estatistica.unidade}</small>
+
+            <small>
+              {estatistica.unidade}
+            </small>
           </strong>
         </article>
       ))}

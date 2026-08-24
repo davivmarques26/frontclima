@@ -14,7 +14,12 @@ import { usarClima } from "./context/ContextoClima";
 import "./App.css";
 
 export default function App() {
-  const { clima, carregando, erro } = usarClima();
+  const {
+    clima,
+    climaMapa,
+    carregando,
+    erro,
+  } = usarClima();
 
   const [paginaAtual, definirPaginaAtual] =
     useState<"inicio" | "mapa">("inicio");
@@ -22,20 +27,31 @@ export default function App() {
   const [visualizacaoMapa, definirVisualizacaoMapa] =
     useState<"mapa" | "detalhes">("mapa");
 
+  function abrirPaginaInicio() {
+    definirPaginaAtual("inicio");
+  }
+
   function abrirPaginaMapa() {
     definirPaginaAtual("mapa");
+  }
+
+  function voltarParaMapa() {
     definirVisualizacaoMapa("mapa");
   }
 
   return (
     <div className="aplicacao">
       <main className="pagina-principal">
+
         <Cabecalho
-          aoClicarInicio={() => definirPaginaAtual("inicio")}
+          aoClicarInicio={abrirPaginaInicio}
           aoClicarMapa={abrirPaginaMapa}
         />
 
-        {/* PÁGINA INICIAL */}
+        {/* =========================
+            PÁGINA INICIAL
+        ========================== */}
+
         {paginaAtual === "inicio" && (
           <>
             <BarraPesquisa />
@@ -62,32 +78,44 @@ export default function App() {
             {clima && !carregando && (
               <>
                 <ClimaAtual />
+
                 <EstatisticasClima />
+
                 <GraficoTemperatura />
+
                 <PrevisaoDiaria />
               </>
             )}
           </>
         )}
 
-        {/* PÁGINA DO MAPA */}
+        {/* =========================
+            PÁGINA MAPA
+        ========================== */}
+
         {paginaAtual === "mapa" && (
           <>
+
+            {/* MAPA GERAL */}
+
             {visualizacaoMapa === "mapa" && (
               <MapaClima
                 aoSelecionarCidade={() =>
-                  definirVisualizacaoMapa("detalhes")
+                  definirVisualizacaoMapa(
+                    "detalhes"
+                  )
                 }
               />
             )}
 
+            {/* DETALHES DA CIDADE */}
+
             {visualizacaoMapa === "detalhes" && (
               <>
+
                 <button
                   className="botao-voltar-mapa"
-                  onClick={() =>
-                    definirVisualizacaoMapa("mapa")
-                  }
+                  onClick={voltarParaMapa}
                 >
                   ← Voltar ao mapa
                 </button>
@@ -104,18 +132,32 @@ export default function App() {
                   </div>
                 )}
 
-                {clima && !carregando && (
+                {climaMapa && !carregando && (
                   <>
-                    <ClimaAtual />
-                    <EstatisticasClima />
-                    <GraficoTemperatura />
-                    <PrevisaoDiaria />
+                    <ClimaAtual
+                      dados={climaMapa}
+                    />
+
+                    <EstatisticasClima
+                      dados={climaMapa}
+                    />
+
+                    <GraficoTemperatura
+                      dados={climaMapa}
+                    />
+
+                    <PrevisaoDiaria
+                      dados={climaMapa}
+                    />
                   </>
                 )}
+
               </>
             )}
+
           </>
         )}
+
       </main>
     </div>
   );
