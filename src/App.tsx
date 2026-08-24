@@ -48,10 +48,6 @@ export default function App() {
           aoClicarMapa={abrirPaginaMapa}
         />
 
-        {/* =========================
-            PÁGINA INICIAL
-        ========================== */}
-
         {paginaAtual === "inicio" && (
           <>
             <BarraPesquisa />
@@ -89,14 +85,8 @@ export default function App() {
           </>
         )}
 
-        {/* =========================
-            PÁGINA MAPA
-        ========================== */}
-
         {paginaAtual === "mapa" && (
           <>
-
-            {/* MAPA GERAL */}
 
             {visualizacaoMapa === "mapa" && (
               <MapaClima
@@ -107,8 +97,6 @@ export default function App() {
                 }
               />
             )}
-
-            {/* DETALHES DA CIDADE */}
 
             {visualizacaoMapa === "detalhes" && (
               <>
