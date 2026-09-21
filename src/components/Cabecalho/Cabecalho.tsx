@@ -5,11 +5,13 @@ import "./Cabecalho.css";
 interface CabecalhoProps {
   aoClicarInicio: () => void;
   aoClicarMapa: () => void;
+  paginaAtual: "inicio" | "mapa"; // Adicionado
 }
 
 export default function Cabecalho({
   aoClicarInicio,
   aoClicarMapa,
+  paginaAtual, // Recebido
 }: CabecalhoProps) {
   const { tema, alternarTema } = usarClima();
 
@@ -22,7 +24,7 @@ export default function Cabecalho({
 
       <div className="acoes-cabecalho">
         <button
-          className="botao-navegacao"
+          className={`botao-navegacao ${paginaAtual === "inicio" ? "ativo" : ""}`}
           onClick={aoClicarInicio}
         >
           <House size={16} />
@@ -30,7 +32,7 @@ export default function Cabecalho({
         </button>
 
         <button
-          className="botao-navegacao"
+          className={`botao-navegacao ${paginaAtual === "mapa" ? "ativo" : ""}`}
           onClick={aoClicarMapa}
         >
           <Map size={16} />

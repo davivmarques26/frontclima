@@ -5,9 +5,11 @@
   gap: 24px;
   margin-bottom: 30px;
 }
+
 .titulo-cabecalho {
   transform: translateY(-8px);
 }
+
 .cabecalho-subtitulo {
   display: block;
   margin-bottom: 2px;
@@ -50,13 +52,26 @@
   cursor: pointer;
 
   transition:
-    background 0.2s,
-    transform 0.2s;
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.botao-navegacao:hover {
+.botao-navegacao.ativo {
   background: var(--cor-painel);
-  transform: translateY(-1px);
+  color: var(--cor-texto);
+  border-color: var(--cor-texto);
+  cursor: default;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.botao-navegacao:not(.ativo):hover {
+  background: var(--cor-painel);
+  transform: translateY(-2px);
+  border-color: var(--cor-texto-secundario);
 }
 
 /* Botão de tema */
@@ -79,13 +94,15 @@
   cursor: pointer;
 
   transition:
-    background 0.2s,
-    transform 0.2s;
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .botao-tema:hover {
   background: var(--cor-painel);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 /* Responsividade */

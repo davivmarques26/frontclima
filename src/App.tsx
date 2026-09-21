@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Cabecalho from "./components/Cabecalho/Cabecalho";
 import BarraPesquisa from "./components/BarraPesquisa/BarraPesquisa";
@@ -19,6 +19,7 @@ export default function App() {
     climaMapa,
     carregando,
     erro,
+    usarMinhaLocalizacao,
   } = usarClima();
 
   const [paginaAtual, definirPaginaAtual] =
@@ -26,6 +27,10 @@ export default function App() {
 
   const [visualizacaoMapa, definirVisualizacaoMapa] =
     useState<"mapa" | "detalhes">("mapa");
+
+  useEffect(() => {
+    usarMinhaLocalizacao();
+  }, [usarMinhaLocalizacao]);
 
   function abrirPaginaInicio() {
     definirPaginaAtual("inicio");
@@ -46,6 +51,7 @@ export default function App() {
         <Cabecalho
           aoClicarInicio={abrirPaginaInicio}
           aoClicarMapa={abrirPaginaMapa}
+          paginaAtual={paginaAtual}
         />
 
         {paginaAtual === "inicio" && (
@@ -64,9 +70,14 @@ export default function App() {
               </div>
             )}
 
-            {!clima && !carregando && (
+            {!clima && !carregando && !erro && (
               <>
-                <MapaClima />
+                <MapaClima
+                  aoSelecionarCidade={() => {
+                    definirPaginaAtual("mapa");
+                    definirVisualizacaoMapa("detalhes");
+                  }}
+                />
                 <EstadoVazio />
               </>
             )}
@@ -87,7 +98,6 @@ export default function App() {
 
         {paginaAtual === "mapa" && (
           <>
-
             {visualizacaoMapa === "mapa" && (
               <MapaClima
                 aoSelecionarCidade={() =>
@@ -100,7 +110,6 @@ export default function App() {
 
             {visualizacaoMapa === "detalhes" && (
               <>
-
                 <button
                   className="botao-voltar-mapa"
                   onClick={voltarParaMapa}
@@ -139,10 +148,8 @@ export default function App() {
                     />
                   </>
                 )}
-
               </>
             )}
-
           </>
         )}
 
