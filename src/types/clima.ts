@@ -6,6 +6,14 @@ export interface Localizacao {
   longitude: number;
   fusoHorario?: string;
 }
+export interface SugestaoCidade {
+  id: number;
+  nome: string;
+  estado?: string;
+  pais?: string;
+  latitude: number;
+  longitude: number;
+}
 
 export interface PrevisaoDia {
   data: string;

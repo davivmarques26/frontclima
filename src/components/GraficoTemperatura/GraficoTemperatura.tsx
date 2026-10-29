@@ -9,31 +9,51 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
 import { usarClima } from "../../context/ContextoClima";
 import { obterDiaCurto } from "../../utils/clima";
+import type { DadosClima } from "../../types/clima";
+
 import "./GraficoTemperatura.css";
 
-export default function GraficoTemperatura() {
+interface GraficoTemperaturaProps {
+  dados?: DadosClima | null;
+}
+
+export default function GraficoTemperatura({
+  dados,
+}: GraficoTemperaturaProps) {
   const { clima } = usarClima();
 
+  const climaExibido = dados ?? clima;
+
   const dadosGrafico = useMemo(() => {
-    if (!clima) return [];
+    if (!climaExibido) {
+      return [];
+    }
 
-    return clima.diario.map((dia, indice) => ({
-      dia: obterDiaCurto(dia.data, indice),
-      maxima: Math.round(dia.maxima),
-      minima: Math.round(dia.minima),
-    }));
-  }, [clima]);
+    return climaExibido.diario.map(
+      (dia, indice) => ({
+        dia: obterDiaCurto(dia.data, indice),
+        maxima: Math.round(dia.maxima),
+        minima: Math.round(dia.minima),
+      })
+    );
+  }, [climaExibido]);
 
-  if (!clima) return null;
+  if (!climaExibido) {
+    return null;
+  }
 
   return (
     <section className="painel painel-grafico">
       <h2>TEMPERATURA — 7 DIAS</h2>
 
       <div className="area-grafico">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+        >
           <LineChart
             data={dadosGrafico}
             margin={{
@@ -65,14 +85,20 @@ export default function GraficoTemperatura() {
             <Tooltip
               formatter={(valor, nome) => [
                 `${valor}°C`,
-                nome === "maxima" ? "Máxima" : "Mínima",
+                nome === "maxima"
+                  ? "Máxima"
+                  : "Mínima",
               ]}
-              labelFormatter={(rotulo) => `Dia: ${rotulo}`}
+              labelFormatter={(rotulo) =>
+                `Dia: ${rotulo}`
+              }
             />
 
             <Legend
               formatter={(valor) =>
-                valor === "maxima" ? "Máxima" : "Mínima"
+                valor === "maxima"
+                  ? "Máxima"
+                  : "Mínima"
               }
             />
 
@@ -81,7 +107,10 @@ export default function GraficoTemperatura() {
               dataKey="maxima"
               stroke="#ff6b00"
               strokeWidth={2}
-              dot={{ r: 3, fill: "#ff6b00" }}
+              dot={{
+                r: 3,
+                fill: "#ff6b00",
+              }}
               activeDot={{ r: 5 }}
             />
 
@@ -90,7 +119,10 @@ export default function GraficoTemperatura() {
               dataKey="minima"
               stroke="#55a2ff"
               strokeWidth={2}
-              dot={{ r: 3, fill: "#55a2ff" }}
+              dot={{
+                r: 3,
+                fill: "#55a2ff",
+              }}
               activeDot={{ r: 5 }}
             />
           </LineChart>

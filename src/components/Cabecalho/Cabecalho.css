@@ -6,12 +6,17 @@
   margin-bottom: 30px;
 }
 
+.titulo-cabecalho {
+  transform: translateY(-8px);
+}
+
 .cabecalho-subtitulo {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: var(--cor-texto-secundario);
   font-size: 10px;
   letter-spacing: 0.2em;
+  align-items: flex-start;
 }
 
 .cabecalho h1 {
@@ -20,17 +25,100 @@
   line-height: 1.2;
 }
 
+/* Área dos botões do cabeçalho */
+.acoes-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Botões Início e Mapa */
+.botao-navegacao {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 14px;
+
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+
+  color: var(--cor-texto);
+  background: var(--cor-painel-secundario);
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.botao-navegacao.ativo {
+  background: var(--cor-painel);
+  color: var(--cor-texto);
+  border-color: var(--cor-texto);
+  cursor: default;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.botao-navegacao:not(.ativo):hover {
+  background: var(--cor-painel);
+  transform: translateY(-2px);
+  border-color: var(--cor-texto-secundario);
+}
+
+/* Botão de tema */
 .botao-tema {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 14px;
+
+  padding: 8px 14px;
+
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
+
   color: var(--cor-texto);
   background: var(--cor-painel-secundario);
+
   font-size: 12px;
   font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.botao-tema:hover {
+  background: var(--cor-painel);
+  transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .cabecalho {
+    gap: 16px;
+  }
+
+  .acoes-cabecalho {
+    gap: 6px;
+  }
+
+  .botao-navegacao,
+  .botao-tema {
+    padding: 8px 10px;
+  }
 }
 
 @media (max-width: 440px) {
@@ -42,7 +130,14 @@
     font-size: 18px;
   }
 
+  .acoes-cabecalho {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .botao-navegacao,
   .botao-tema {
     padding: 8px 10px;
+    font-size: 11px;
   }
 }

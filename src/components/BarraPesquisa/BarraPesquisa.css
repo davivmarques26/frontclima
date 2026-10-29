@@ -7,22 +7,31 @@
 
 .campo-pesquisa {
   min-height: 47px;
+
   display: flex;
   align-items: center;
   gap: 10px;
+
   padding: 0 14px;
+
   border: 1px solid var(--cor-borda);
   border-radius: 11px;
+
   background: var(--cor-input);
+
   color: var(--cor-azul);
 }
 
 .campo-pesquisa input {
   width: 100%;
+
   border: 0;
   outline: 0;
+
   background: transparent;
+
   color: var(--cor-texto);
+
   font-size: 13px;
 }
 
@@ -33,12 +42,94 @@
 .botao-localizacao {
   display: grid;
   place-items: center;
+
   border: 0;
   border-radius: 11px;
+
   color: white;
   background: var(--cor-azul);
+
+  cursor: pointer;
 }
 
 .botao-localizacao:disabled {
   opacity: 0.55;
+}
+
+/* Container geral da pesquisa */
+.container-pesquisa {
+  position: relative;
+  width: 100%;
+}
+
+/* Lista que aparece abaixo do campo */
+.lista-sugestoes {
+  position: absolute;
+
+  top: 56px;
+  left: 0;
+
+  width: calc(100% - 64px);
+
+  z-index: 1000;
+
+  overflow: hidden;
+
+  border: 1px solid var(--cor-borda);
+  border-radius: 11px;
+
+  background: var(--cor-input);
+}
+
+/* Cada sugestão */
+.item-sugestao {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px 18px;
+
+  border: 0;
+  border-bottom: 1px solid var(--cor-borda);
+
+  background: transparent;
+  color: var(--cor-texto);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: background 0.2s;
+}
+
+/* Remove a linha do último item */
+.item-sugestao:last-child {
+  border-bottom: 0;
+}
+
+/* Hover */
+.item-sugestao:hover {
+  background: var(--cor-painel-secundario);
+}
+
+/* Ícone do planeta */
+.icone-sugestao {
+  flex-shrink: 0;
+
+  font-size: 16px;
+}
+
+/* Nome da cidade */
+.item-sugestao strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Estado e país */
+.local-sugestao {
+  color: var(--cor-texto-secundario);
+
+  font-size: 12px;
 }

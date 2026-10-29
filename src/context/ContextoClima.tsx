@@ -6,7 +6,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DadosClima } from "../types/clima";
+
+import type {
+  DadosClima,
+  Localizacao,
+  SugestaoCidade,
+} from "../types/clima";
+
 import {
   buscarCidade,
   buscarClima,
@@ -15,54 +21,147 @@ import {
 
 interface ValorContextoClima {
   clima: DadosClima | null;
+  climaMapa: DadosClima | null;
   carregando: boolean;
   erro: string | null;
   tema: "escuro" | "claro";
+
   pesquisarClima: (cidade: string) => Promise<void>;
+
+  pesquisarClimaPorSugestao: (
+    sugestao: SugestaoCidade
+  ) => Promise<void>;
+
+  pesquisarClimaPorLocalizacao: (
+    localizacao: Localizacao
+  ) => Promise<void>;
+
   usarMinhaLocalizacao: () => void;
   alternarTema: () => void;
 }
 
-const ContextoClima = createContext<ValorContextoClima | undefined>(undefined);
+const ContextoClima =
+  createContext<ValorContextoClima | undefined>(undefined);
 
-export function ProvedorClima({ children }: { children: ReactNode }) {
-  const [clima, definirClima] = useState<DadosClima | null>(null);
-  const [carregando, definirCarregando] = useState(false);
-  const [erro, definirErro] = useState<string | null>(null);
-  const [tema, definirTema] = useState<"escuro" | "claro">("escuro");
+export function ProvedorClima({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const [clima, definirClima] =
+    useState<DadosClima | null>(null);
 
-  const pesquisarClima = useCallback(async (cidade: string) => {
-    const cidadeTratada = cidade.trim();
+  const [climaMapa, definirClimaMapa] =
+    useState<DadosClima | null>(null);
 
-    if (!cidadeTratada) {
-      definirErro("Digite o nome de uma cidade.");
-      return;
-    }
+  const [carregando, definirCarregando] =
+    useState(false);
 
-    try {
-      definirCarregando(true);
-      definirErro(null);
+  const [erro, definirErro] =
+    useState<string | null>(null);
 
-      const localizacao = await buscarCidade(cidadeTratada);
-      const dadosClima = await buscarClima(localizacao);
+  const [tema, definirTema] =
+    useState<"escuro" | "claro">("escuro");
 
-      definirClima(dadosClima);
-    } catch (erroCapturado) {
-      definirClima(null);
+  const pesquisarClima = useCallback(
+    async (cidade: string) => {
+      const cidadeTratada = cidade.trim();
 
-      definirErro(
-        erroCapturado instanceof Error
-          ? erroCapturado.message
-          : "Ocorreu um erro inesperado."
-      );
-    } finally {
-      definirCarregando(false);
-    }
-  }, []);
+      if (!cidadeTratada) {
+        definirErro("Digite o nome de uma cidade.");
+        return;
+      }
+
+      try {
+        definirCarregando(true);
+        definirErro(null);
+
+        const localizacao =
+          await buscarCidade(cidadeTratada);
+
+        const dadosClima =
+          await buscarClima(localizacao);
+
+        definirClima(dadosClima);
+      } catch (erroCapturado) {
+        definirClima(null);
+
+        definirErro(
+          erroCapturado instanceof Error
+            ? erroCapturado.message
+            : "Ocorreu um erro inesperado."
+        );
+      } finally {
+        definirCarregando(false);
+      }
+    },
+    []
+  );
+
+  const pesquisarClimaPorSugestao = useCallback(
+    async (sugestao: SugestaoCidade) => {
+      try {
+        definirCarregando(true);
+        definirErro(null);
+
+        const localizacao: Localizacao = {
+          nome: sugestao.nome,
+          estado: sugestao.estado,
+          pais: sugestao.pais ?? "",
+          latitude: sugestao.latitude,
+          longitude: sugestao.longitude,
+        };
+
+        const dadosClima =
+          await buscarClima(localizacao);
+
+        definirClima(dadosClima);
+      } catch (erroCapturado) {
+        definirClima(null);
+
+        definirErro(
+          erroCapturado instanceof Error
+            ? erroCapturado.message
+            : "Ocorreu um erro inesperado."
+        );
+      } finally {
+        definirCarregando(false);
+      }
+    },
+    []
+  );
+
+  const pesquisarClimaPorLocalizacao = useCallback(
+    async (localizacao: Localizacao) => {
+      try {
+        definirCarregando(true);
+        definirErro(null);
+
+        const dadosClima =
+          await buscarClima(localizacao);
+
+        definirClimaMapa(dadosClima);
+      } catch (erroCapturado) {
+        definirClimaMapa(null);
+
+        definirErro(
+          erroCapturado instanceof Error
+            ? erroCapturado.message
+            : "Ocorreu um erro inesperado."
+        );
+      } finally {
+        definirCarregando(false);
+      }
+    },
+    []
+  );
 
   const usarMinhaLocalizacao = useCallback(() => {
     if (!navigator.geolocation) {
-      definirErro("Seu navegador não oferece suporte à geolocalização.");
+      definirErro(
+        "Seu navegador não oferece suporte à geolocalização."
+      );
+
       return;
     }
 
@@ -72,10 +171,11 @@ export function ProvedorClima({ children }: { children: ReactNode }) {
     navigator.geolocation.getCurrentPosition(
       async ({ coords }) => {
         try {
-          const dadosClima = await buscarClimaPorCoordenadas(
-            coords.latitude,
-            coords.longitude
-          );
+          const dadosClima =
+            await buscarClimaPorCoordenadas(
+              coords.latitude,
+              coords.longitude
+            );
 
           definirClima(dadosClima);
         } catch (erroCapturado) {
@@ -88,12 +188,15 @@ export function ProvedorClima({ children }: { children: ReactNode }) {
           definirCarregando(false);
         }
       },
+
       () => {
         definirCarregando(false);
+
         definirErro(
           "Não foi possível acessar sua localização. Verifique a permissão do navegador."
         );
       },
+
       {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -103,34 +206,46 @@ export function ProvedorClima({ children }: { children: ReactNode }) {
 
   const alternarTema = useCallback(() => {
     definirTema((temaAtual) =>
-      temaAtual === "escuro" ? "claro" : "escuro"
+      temaAtual === "escuro"
+        ? "claro"
+        : "escuro"
     );
   }, []);
 
   const valorContexto = useMemo(
     () => ({
       clima,
+      climaMapa,
       carregando,
       erro,
       tema,
       pesquisarClima,
+      pesquisarClimaPorSugestao,
+      pesquisarClimaPorLocalizacao,
       usarMinhaLocalizacao,
       alternarTema,
     }),
     [
       clima,
+      climaMapa,
       carregando,
       erro,
       tema,
       pesquisarClima,
+      pesquisarClimaPorSugestao,
+      pesquisarClimaPorLocalizacao,
       usarMinhaLocalizacao,
       alternarTema,
     ]
   );
 
   return (
-    <ContextoClima.Provider value={valorContexto}>
-      <div data-tema={tema}>{children}</div>
+    <ContextoClima.Provider
+      value={valorContexto}
+    >
+      <div data-tema={tema}>
+        {children}
+      </div>
     </ContextoClima.Provider>
   );
 }
@@ -139,7 +254,9 @@ export function usarClima() {
   const contexto = useContext(ContextoClima);
 
   if (!contexto) {
-    throw new Error("usarClima deve ser usado dentro de ProvedorClima.");
+    throw new Error(
+      "usarClima deve ser usado dentro de ProvedorClima."
+    );
   }
 
   return contexto;
